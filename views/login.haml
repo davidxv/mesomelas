@@ -1,0 +1,10 @@
+.span-18
+  %form{:action => "/login", :method => "post"}
+    %p
+      %label{:for => 'login'} Login:
+      %input.name{:type => "text", :name => "login", :id => "login"}
+    %p
+      %label{:for => 'password'} Password:
+      %input.password{:type => "password", :name => "password", :id => "password"}
+    %input{:type => "submit", :name => "submit", :value => "submit"}
+  
