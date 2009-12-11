@@ -7,16 +7,23 @@ require "haml"
 require 'cgi'
 require 'sinatra/chowder'
 require "chowder"
+require 'rack-flash'
+require "jkl"
 
 require "lib/models"
 
 include Mongo
-
+include Jkl
 
 mongo_host = YAML::load_file('config/config.yml')['mongo-host']
 mongo_db = YAML::load_file('config/config.yml')['mongo-db'] 
 MongoMapper.connection = Mongo::Connection.new(mongo_host, 27017)
 MongoMapper.database = mongo_db
+#Search.ensure_index([["raw", 1]])
+#MongoMapper.ensure_indexes!
+
+use Rack::Flash
+enable :sessions
 
 use Chowder::Basic,{
   :login => lambda do |login, password|
@@ -42,7 +49,58 @@ use Chowder::Basic,{
 get '/' do
   require_user
   @user = current_user
+  @projects = @user.projects
+  twitter_json_url = YAML::load_file('config/config.yml')['twitter'] 
+#  output = JSON.parse Jkl::get_from twitter_json_url
+  @trends = []
+#  @trends = output['trends']
   haml :index
+end
+
+get "/projects/:name" do
+  @project = Project.find_by_user_id_and_name(current_user.id, params[:name])
+  session["current_project"] = @project.id
+  @searches = @project.searches
+  haml :project
+end
+
+post "/project" do
+  p = Project.new({:name => CGI::unescape(params["name"])})
+  @user = current_user
+
+  if (!Project.exists_for_user(@user.id, p.name))
+    @user.projects << p
+    @user.save!
+  else
+    flash[:notice] = "You already have a project with that name"
+  end
+  @user = current_user
+  @projects = @user.projects
+  @trends = []
+  haml :index
+end
+
+get "/projects/:project_name/searches/:name" do
+  #get objects
+  haml :search
+end
+
+get "/projects/:project_id/delete" do
+  Project.find(params[:project_id]).destroy
+  redirect "/"
+end
+
+post "/search" do
+  s = Search.new({:query => CGI::unescape(params["query"]) })
+  p = Project.find(params["project_id"])
+  if (!Search.exists_for_project(p.id, s.query))
+    p.searches << s
+    p.save!
+  else
+    flash[:notice] = "You already have a search with that name in this project"
+  end
+  
+  haml :project
 end
 
 helpers do

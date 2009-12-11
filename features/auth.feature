@@ -4,17 +4,20 @@ Feature: Authorisation
 	@acceptance
 	Scenario: Sign up and log in
 		Given I am on /
-		Then I should go to "/login"
-		And I should see a login form
-		When I click "here"
-		Then I should go to "/signup"
-		And I should see a login form
+		Then it should load /login
+		And I should see Login
+		And I should see Password
+		When I click here
+		Then it should load /signup
+		And I should see Login
+		And I should see Password
 		When I sign up
-		Then I should go to "/"
+		Then it should load /
 		
 	@acceptance
 	Scenario: Logout
-		Given I am logged in
-		When I click "logout"
-		Then I should go to "/login"
+		Given I am on /
+    When I log in as test user1
+		When I click logout
+		Then it should load /login
 		
