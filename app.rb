@@ -15,15 +15,11 @@ require "lib/models"
 include Mongo
 include Jkl
 
-mongo_host = YAML::load_file('config/config.yml')['mongo-host']
-mongo_db = YAML::load_file('config/config.yml')['mongo-db'] 
-MongoMapper.connection = Mongo::Connection.new(mongo_host, 27017)
-MongoMapper.database = mongo_db
-#Search.ensure_index([["raw", 1]])
-#MongoMapper.ensure_indexes!
+config = YAML::load_file('config/config.yml')
 
-use Rack::Flash
 enable :sessions
+use Rack::Flash
+
 
 use Chowder::Basic,{
   :login => lambda do |login, password|
@@ -47,10 +43,11 @@ use Chowder::Basic,{
 
   
 get '/' do
+  # TODO Sinatra::Application.environment.inspect sniff
   require_user
   @user = current_user
   @projects = @user.projects
-  twitter_json_url = YAML::load_file('config/config.yml')['twitter'] 
+  twitter_json_url = config['twitter'] 
 #  output = JSON.parse Jkl::get_from twitter_json_url
   @trends = []
 #  @trends = output['trends']
@@ -66,11 +63,9 @@ end
 
 post "/project" do
   p = Project.new({:name => CGI::unescape(params["name"])})
-  @user = current_user
-
-  if (!Project.exists_for_user(@user.id, p.name))
-    @user.projects << p
-    @user.save!
+  if(!current_user.projects.include?(p))
+    current_user.projects << p
+    current_user.save!
   else
     flash[:notice] = "You already have a project with that name"
   end
@@ -93,7 +88,7 @@ end
 post "/search" do
   s = Search.new({:query => CGI::unescape(params["query"]) })
   p = Project.find(params["project_id"])
-  if (!Search.exists_for_project(p.id, s.query))
+  if(!p.searches.include?(s))
     p.searches << s
     p.save!
   else
@@ -108,3 +103,4 @@ helpers do
     User.find(session[:current_user])
   end
 end
+

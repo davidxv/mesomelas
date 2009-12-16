@@ -23,11 +23,6 @@ class Project
   
   many :searches
 
-  def self.exists_for_user(user_id, project_name)
-    projects = User.find(user_id).projects
-    projects.select { |p| p.name == project_name }[0]
-  end
-  
 end
 
 class Search
@@ -39,11 +34,6 @@ class Search
   
   belongs_to :project
   many :tags
-  
-  def self.exists_for_project(project_id, query)
-    searches = Project.find(project_id).searches
-    searches.select { |s| s.query == query }[0]
-  end
   
 end
 
