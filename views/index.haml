@@ -1,6 +1,6 @@
 .span-18
   %p
-    Welcome #{@user.login} 
+    You are logged in as: #{@user.login} 
     %a{:href => "/logout"} (logout)
     .notice #{flash[:notice]}
 

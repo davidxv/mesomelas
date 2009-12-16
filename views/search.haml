@@ -1,15 +1,7 @@
 .span-18
-  - if @project.searches.length > 0 && @project.searches != nil
-    %h3 Your #{@search.name} searches:
-    %ul
-      - @project.searches.each do |search|
-        %li
-          %a{:href=>"/projects/#{CGI::escape(@project.name)}/searches/#{CGI::escape(@search.query)}"} #{search.query}
-
-  %form{:action => '/search', :method => 'post'}
-    %p This page hasn't been implemented yet
-    %p
-      %label{:for => 'project'} Name:
-      %input.hidden{:type => "hidden", :name => "project_id", :title => "project_id", :id => "project_id", :value => "#{@project.id}"}
-      %input.query{:type => 'text', :name => 'name', :size => '46', :maxlength => '2048', :title => 'name', :id => 'name'}
-      %input.create{:type => 'submit', :name => 'create', :id => 'create', :value => 'Create'}
+  %p
+    You are logged in as: #{@user.login} 
+    %a{:href => "/logout"} (logout)
+    .notice #{flash[:notice]}
+  %h3 
+    Search: #{@search.name} 

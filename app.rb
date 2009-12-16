@@ -56,8 +56,8 @@ end
 
 get "/projects/:name" do
   @project = Project.find_by_user_id_and_name(current_user.id, params[:name])
-  session["current_project"] = @project.id
   @searches = @project.searches
+  @user = current_user
   haml :project
 end
 
@@ -77,8 +77,10 @@ post "/project" do
   haml :index
 end
 
-get "/projects/:project_name/searches/:name" do
-  #get objects
+get "/projects/:project_name/searches/:query" do
+  @search = Search.find_by_user_id_and_name(current_user.id, params[:query])
+  @project = Project.find(@search.project_id)
+  @user = current_user
   haml :search
 end
 
@@ -90,13 +92,16 @@ end
 post "/search" do
   s = Search.new({:query => CGI::unescape(params["query"]) })
   p = Project.find(params["project_id"])
-  if(!p.searches.include?(s))
+  if(!Search.exists?(:conditions => 
+      {:query => s.query, :project_id => p.id}))
     p.searches << s
     p.save!
   else
     flash[:notice] = "You already have a search with that name in this project"
   end
-  
+  @user = current_user
+  @project = Project.find(p.id)
+  @searches = @project.searches
   haml :project
 end
 

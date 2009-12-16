@@ -1,4 +1,8 @@
 .span-18
+  %p
+    You are logged in as: #{@user.login} 
+    %a{:href => "/logout"} (logout)
+    .notice #{flash[:notice]}
   %h3 
     Project: #{@project.name} 
     %a{:href => "/projects/#{@project.id}/delete"} (delete)
