@@ -23,10 +23,6 @@ class Project
   
   many :searches
 
-  def self.exists_already(projects, name)
-    pnames = projects.map{|p| p.name }
-    pnames.include?(name)
-  end
 end
 
 class Search

@@ -64,7 +64,8 @@ end
 post "/project" do
   p = Project.new({:name => CGI::unescape(params["name"])})
   
-  if(!Project.exists_already(current_user.projects, p.name))
+  if(!Project.exists?(:conditions => 
+      {:name => p.name, :user_id => current_user.id}))
     current_user.projects << p
     current_user.save!
   else
