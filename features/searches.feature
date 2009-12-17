@@ -12,7 +12,7 @@ Feature: Searches
   Scenario: Click on a search
     Given I have an existing search My First Search
     When I click My First Search
-    Then I should see the "search" page
+    Then it should load /projects/My+First+Project/searches/My+First+Search
 
   @wip
   Scenario: Delete a search

@@ -78,7 +78,8 @@ post "/project" do
 end
 
 get "/projects/:project_name/searches/:query" do
-  @search = Search.find_by_user_id_and_name(current_user.id, params[:query])
+  p = Project.find_by_user_id_and_name(current_user.id, params[:project_name])
+  @search = Search.find_by_project_id_and_query(p.id, params[:query])
   @project = Project.find(@search.project_id)
   @user = current_user
   haml :search
