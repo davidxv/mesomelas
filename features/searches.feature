@@ -16,6 +16,11 @@ Feature: Searches
 
   @wip
   Scenario: Delete a search
+    Given I have an existing search My First Search
+    When I click My First Search
+    And I click (delete)
+    Then I should see My First Project searches:
+    And I should not see My First Search
   
   @wip
   Scenario: Check you can't add a duplicate search

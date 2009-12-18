@@ -74,13 +74,12 @@ post "/project" do
   @user = current_user
   @projects = @user.projects
   @trends = []
-  haml :index
+  redirect "/"
 end
 
 get "/projects/:project_name/searches/:query" do
-  p = Project.find_by_user_id_and_name(current_user.id, params[:project_name])
-  @search = Search.find_by_project_id_and_query(p.id, params[:query])
-  @project = Project.find(@search.project_id)
+  @project = Project.find_by_user_id_and_name(current_user.id, params[:project_name])
+  @search = Search.find_by_project_id_and_query(@project.id, params[:query])
   @user = current_user
   haml :search
 end
@@ -103,7 +102,14 @@ post "/search" do
   @user = current_user
   @project = Project.find(p.id)
   @searches = @project.searches
-  haml :project
+  redirect "/projects/#{CGI::escape(@project.name)}"
+end
+
+get "/projects/:project_id/searches/:search_id/delete" do
+  s = Search.find(params[:search_id])
+  p = Project.find(s.project_id)
+  s.destroy
+  redirect "/projects/#{CGI::escape(p.name)}"
 end
 
 helpers do

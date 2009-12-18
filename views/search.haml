@@ -4,4 +4,5 @@
     %a{:href => "/logout"} (logout)
     .notice #{flash[:notice]}
   %h3 
-    Search: #{@search.query} 
+    Search: #{@search.query}
+    %a{:href => "/projects/#{@project.id}/searches/#{@search.id}/delete"} (delete) 
