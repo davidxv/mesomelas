@@ -11,3 +11,11 @@ When /^I create a new search (.*)$/ do |search|
   fill_in "query", :with => search
   click_button "Create Search"
 end
+
+Then /^there should be a list of links$/ do
+  response_body.should have_selector("li.link")
+end
+
+Then /^there should be a summary$/ do
+  response_body.should have_selector("div.summary")
+end

@@ -1,0 +1,8 @@
+%ul
+  - @entities.each do |entity|
+    %li
+      = entity.type
+      %ul
+        - entity.instances.each do |instance|
+          %li
+            = instance.exact

@@ -29,22 +29,24 @@ class Search
   include MongoMapper::Document
 
   key :query, String
+  key :summary, String
   key :project_id, ObjectId
   timestamps!
   
   belongs_to :project
+  many :links
   many :tags
   
-end
-
-class Tag
-  include MongoMapper::Document
+  def add_links(links)
+    links = Jkl::links Jkl::headlines query
+    links.each{|l|
+      self.links << Link.new(:url => l)
+    }
+  end
   
-  key :url, String
-  key :search_id, ObjectId
-  timestamps!
-  
-  belongs_to :search
+  def add_tags
+    
+  end
 
 end
 
@@ -52,9 +54,23 @@ class Link
   include MongoMapper::Document
   
   key :url, String
+  key :document, Binary, :index => true 
   key :search_id, ObjectId
-  key :raw, Binary, :index => true 
   timestamps!
 
   belongs_to :search
 end
+
+class Tag
+  include MongoMapper::Document
+  
+  key :type, String
+  key :value, String
+  
+  key :search_id, ObjectId
+  timestamps!
+  
+  belongs_to :search
+
+end
+

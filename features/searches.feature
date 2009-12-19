@@ -8,13 +8,11 @@ Feature: Searches
     Then I should see My First Project searches
     And I should see My First Search
     
-  @wip
   Scenario: Click on a search
     Given I have an existing search My First Search
     When I click My First Search
     Then it should load /projects/My+First+Project/searches/My+First+Search
 
-  @wip
   Scenario: Delete a search
     Given I have an existing search My First Search
     When I click My First Search
@@ -24,3 +22,10 @@ Feature: Searches
   
   @wip
   Scenario: Check you can't add a duplicate search
+  
+  Scenario: View links on a search page
+    Given I have an existing search golf
+    When I click golf
+    Then it should load /projects/My+First+Project/searches/golf
+    And there should be a list of links
+    And there should be a summary

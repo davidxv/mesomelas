@@ -6,3 +6,11 @@
   %h3 
     Search: #{@search.query}
     %a{:href => "/projects/#{@project.id}/searches/#{@search.id}/delete"} (delete) 
+    
+  - if @search.links.length > 0
+    %ul
+      - @search.links.each do |link|
+        %li.link
+          %a{:href=>"/projects/#{CGI::escape(link.url)}/searches/#{CGI::escape(@search.query)}"} #{link.url}
+  .summary
+    = @search.summary

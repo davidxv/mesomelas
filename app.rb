@@ -94,15 +94,18 @@ post "/search" do
   p = Project.find(params["project_id"])
   if(!Search.exists?(:conditions => 
       {:query => s.query, :project_id => p.id}))
+    #add links and description to search object
+    headlines = Jkl::headlines(s.query)
+    Jkl::links(headlines).each{|l|
+      s.links << Link.new(:url => l)
+    }
+    s.summary = Jkl::pages(headlines)
     p.searches << s
     p.save!
   else
     flash[:notice] = "You already have a search with that name in this project"
   end
-  @user = current_user
-  @project = Project.find(p.id)
-  @searches = @project.searches
-  redirect "/projects/#{CGI::escape(@project.name)}"
+  redirect "/projects/#{CGI::escape(p.name)}"
 end
 
 get "/projects/:project_id/searches/:search_id/delete" do
@@ -110,6 +113,14 @@ get "/projects/:project_id/searches/:search_id/delete" do
   p = Project.find(s.project_id)
   s.destroy
   redirect "/projects/#{CGI::escape(p.name)}"
+end
+
+get "/test" do
+  #c.entities[45].instances[0].prefix
+  @summary = Jkl::pages Jkl::headlines "tiger woods"
+  tags = Jkl::tags @summary
+  @entities = tags.entities
+  haml :results
 end
 
 helpers do
