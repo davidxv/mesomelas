@@ -1,16 +1,14 @@
 .span-18
-  %p
-    You are logged in as: #{@user.login} 
-    %a{:href => "/logout"} (logout)
-    .notice #{flash[:notice]}
+  = haml :_user, :layout => false
   %h3 
     Search: #{@search.query}
     %a{:href => "/projects/#{@project.id}/searches/#{@search.id}/delete"} (delete) 
-    
+    TODO - add search timestamps here
   - if @search.links.length > 0
     %ul
       - @search.links.each do |link|
         %li.link
-          %a{:href=>"/projects/#{CGI::escape(link.url)}/searches/#{CGI::escape(@search.query)}"} #{link.url}
-  .summary
-    = @search.summary
+          %a{:href=>"/projects/#{@project.id}/searches/#{@search.id}/link/#{link.id}"} #{link.url}
+          .blockquote
+            %p #{link.description}
+  

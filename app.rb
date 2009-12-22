@@ -94,18 +94,27 @@ post "/search" do
   p = Project.find(params["project_id"])
   if(!Search.exists?(:conditions => 
       {:query => s.query, :project_id => p.id}))
-    #add links and description to search object
     headlines = Jkl::headlines(s.query)
-    Jkl::links(headlines).each{|l|
-      s.links << Link.new(:url => l)
-    }
-    s.summary = Jkl::pages(headlines)
+    Jkl::get_items_from(headlines).each do |item|
+      link = Jkl::attribute_from(item, :link)
+      desc = Jkl::attribute_from(item, :description).gsub("<![CDATA[","").gsub("]]>","")
+      s.links << Link.new(:url => link, :description => desc)
+    end
     p.searches << s
     p.save!
   else
     flash[:notice] = "You already have a search with that name in this project"
   end
   redirect "/projects/#{CGI::escape(p.name)}"
+end
+
+post "/link/update/:id" do
+  link = Link.find(params[:id])
+  tags = Jkl::tags(params[:summary])
+  search = Search.find(link.search_id)
+  puts tags.inspect
+  @entities = tags.entities
+  haml :results
 end
 
 get "/projects/:project_id/searches/:search_id/delete" do
@@ -115,10 +124,33 @@ get "/projects/:project_id/searches/:search_id/delete" do
   redirect "/projects/#{CGI::escape(p.name)}"
 end
 
+get "/projects/:project_id/searches/:search_id/link/:link_id" do
+  @project = Project.find(params[:project_id])
+  @search = Search.find(params[:search_id])
+  @user = current_user
+  @link = Link.find(params[:link_id])
+  @story = Jkl::sanitize Jkl::from_doc Jkl::get_from @link.url
+  haml :link
+end
+
 get "/test" do
   #c.entities[45].instances[0].prefix
-  @summary = Jkl::pages Jkl::headlines "tiger woods"
-  tags = Jkl::tags @summary
+  tags = []
+  links = Jkl::links Jkl::headlines "tiger woods"
+  links.each do |link|
+    story = Jkl::sanitize Jkl::from_doc Jkl::get_from link
+    puts story
+    puts ""
+    puts "end story #{link}"
+    begin
+      tags << Jkl::tags(story)
+    rescue Calais::Error => e
+      puts("WARN: Calais Error: #{e}")
+    end
+  end
+  
+  
+  puts tags.length
   @entities = tags.entities
   haml :results
 end
