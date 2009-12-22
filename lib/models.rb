@@ -29,7 +29,6 @@ class Search
   include MongoMapper::Document
 
   key :query, String
-  key :summary, String
   key :project_id, ObjectId
   timestamps!
   
@@ -54,6 +53,7 @@ class Link
   include MongoMapper::Document
   
   key :url, String
+  key :description, String
   key :document, Binary, :index => true 
   key :search_id, ObjectId
   timestamps!
