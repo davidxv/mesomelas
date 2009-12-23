@@ -34,18 +34,6 @@ class Search
   
   belongs_to :project
   many :links
-  many :tags
-  
-  def add_links(links)
-    links = Jkl::links Jkl::headlines query
-    links.each{|l|
-      self.links << Link.new(:url => l)
-    }
-  end
-  
-  def add_tags
-    
-  end
 
 end
 
@@ -53,24 +41,33 @@ class Link
   include MongoMapper::Document
   
   key :url, String
-  key :description, String
-  key :document, Binary, :index => true 
+  key :description, String 
   key :search_id, ObjectId
+  key :entities, Array
+  key :relations, Array
+  key :geographies, Array
+  
+  #tags.geographies, relations, entities
+  #tags.geographies[0].attributes["latitude"], longitude
+  #tags.geographies[0].name
+
+
+  #relation.type, .instances
+  # person value = 9600f67f-0fc2-3a6a-b896-7d7e543644df
+  
+  
+  #entity has
+    #type
+    #attributes hash name, organizationtype nationality - may be others
+    #instances[0].exact
+  
+  #@instances=[#<Calais::Response::Instance:0x1025ec858 
+  # @prefix="Gatwick and Manchester Transport Minister ", 
+  #   @offset=6316, @suffix=" said he would be \"asking questions\"", 
+  #   @exact="Sadiq Khan", @length= 10>
+  
   timestamps!
 
   belongs_to :search
-end
-
-class Tag
-  include MongoMapper::Document
-  
-  key :type, String
-  key :value, String
-  
-  key :search_id, ObjectId
-  timestamps!
-  
-  belongs_to :search
-
 end
 

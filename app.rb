@@ -7,7 +7,8 @@ require "haml"
 require 'cgi'
 require 'sinatra/chowder'
 require "chowder"
-require 'rack-flash'
+require "rack-flash"
+require "calais"
 require "jkl"
 
 require "lib/models"
@@ -110,11 +111,20 @@ end
 
 post "/link/update/:id" do
   link = Link.find(params[:id])
-  tags = Jkl::tags(params[:summary])
   search = Search.find(link.search_id)
-  puts tags.inspect
-  @entities = tags.entities
-  haml :results
+  project = Project.find(search.project_id)
+  tags = Jkl::tags(params[:summary])
+  link.entities = tags.entities.map do |e| 
+    h = Hash.new
+    h[e.type] = e.attributes["name"]
+    h
+  end
+  puts link.entities[0].inspect
+  #TODO
+  #link.geographies = tags.geographies.map{|g| [g.attributes["latitude"],g.attributes["longitude"]]}
+  # link.relations = tags.relations.map{|r|}
+  link.save
+  redirect "/projects/#{CGI::escape(project.name)}/searches/#{CGI::escape(search.query)}/links/#{link.id}"
 end
 
 get "/projects/:project_id/searches/:search_id/delete" do
@@ -124,12 +134,12 @@ get "/projects/:project_id/searches/:search_id/delete" do
   redirect "/projects/#{CGI::escape(p.name)}"
 end
 
-get "/projects/:project_id/searches/:search_id/link/:link_id" do
-  @project = Project.find(params[:project_id])
-  @search = Search.find(params[:search_id])
+get "/projects/:project_name/searches/:search_query/links/:link_id" do
+  @project = Project.find_by_name(params[:project_name])
+  @search = Search.find_by_query(params[:search_query])
   @user = current_user
   @link = Link.find(params[:link_id])
-  @story = Jkl::sanitize Jkl::from_doc Jkl::get_from @link.url
+  @story = Jkl::sanitize Jkl::from_doc Jkl::get_from @link.url #TODO store
   haml :link
 end
 
@@ -148,7 +158,6 @@ get "/test" do
       puts("WARN: Calais Error: #{e}")
     end
   end
-  
   
   puts tags.length
   @entities = tags.entities

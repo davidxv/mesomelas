@@ -1,4 +1,9 @@
 %p
   You are logged in as: #{@user.login} 
   %a{:href => "/logout"} (logout)
-  .notice #{flash[:notice]}
+  - if flash[:success]
+    .success #{flash[:success]}
+  - if flash[:notice]
+    .notice #{flash[:notice]}
+  - if flash[:error]
+    .error #{flash[:error]}

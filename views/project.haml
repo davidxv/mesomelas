@@ -1,18 +1,16 @@
-.span-18
-  = haml :_user, :layout => false
-  %h3 
-    Project: #{@project.name} 
-    %a{:href => "/projects/#{@project.id}/delete"} (delete)
-  %form{:action => "/search", :method => "post"}
-    %h3 Create a new search:
-    %p
-      %label{:for => "search"} Query:
-      %input.hidden{:type => "hidden", :name => "project_id", :title => "project_id", :id => "project_id", :value => "#{@project.id}"}
-      %input.query{:type => "text", :name => "query", :size => "32", :maxlength => "2048", :title => "query", :id => "query"}
-      %input.create{:type => "submit", :name => "create", :id => "create", :value => "Create Search"}
-  %h3 #{@project.name} searches:
-  - if @searches.length > 0 && @searches != nil
-    %ul
-      - @searches.each do |search|
-        %li
-          %a{:href=>"/projects/#{CGI::escape(@project.name)}/searches/#{CGI::escape(search.query)}"} #{search.query}
+%h3 
+  Project: #{@project.name} 
+  %a{:href => "/projects/#{@project.id}/delete"} (delete)
+%form{:action => "/search", :method => "post"}
+  %h3 Create a new search:
+  %p
+    %label{:for => "search"} Query:
+    %input.hidden{:type => "hidden", :name => "project_id", :title => "project_id", :id => "project_id", :value => "#{@project.id}"}
+    %input.query{:type => "text", :name => "query", :size => "32", :maxlength => "2048", :title => "query", :id => "query"}
+    %input.create{:type => "submit", :name => "create", :id => "create", :value => "Create Search"}
+%h3 #{@project.name} searches:
+- if @searches.length > 0 && @searches != nil
+  %ul
+    - @searches.each do |search|
+      %li
+        %a{:href=>"/projects/#{CGI::escape(@project.name)}/searches/#{CGI::escape(search.query)}"} #{search.query}

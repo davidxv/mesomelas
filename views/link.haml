@@ -1,15 +1,20 @@
-.span-18
-  = haml :_user, :layout => false
-  %h3 
-    Search: #{@search.query}
-    %a{:href => "/projects/#{@project.id}/searches/#{@search.id}/delete"} (delete) 
-    
-    = @link.url
-    TODO add link details
-    
-  You can edit the text retrieved from this URL, and then hit the button to generate tags
-  %form{:action => "/link/update/#{@link.id}", :method => "post"}
-    %textarea{:rows => "50", :cols => "100", :name => "summary", :id => "summary" }
-      = @story
-    %br  
-    %input.create{:type => 'submit', :name => 'update', :id => 'update', :value => 'Generate tags'}   
+%h3 
+  Search: #{@search.query}
+  %a{:href => "/projects/#{@project.id}/searches/#{@search.id}/delete"} (delete) 
+  
+  = @link.url
+  TODO add link details
+  
+You can edit the text retrieved from this URL, and then hit the button to generate tags
+%form{:action => "/link/update/#{@link.id}", :method => "post"}
+  %textarea{:rows => "50", :cols => "100", :name => "summary", :id => "summary" }
+    = @story
+  %br  
+  %input.create{:type => 'submit', :name => 'update', :id => 'update', :value => 'Generate tags'}   
+  
+%ul
+  - if @link.entities != nil
+    - @link.entities.each do |entity|
+      - entity.each do |k,v|
+        %li
+          "#{k} | #{v}"

@@ -1,21 +1,19 @@
-.span-18
-  = haml :_user, :layout => false
-  %form{:action => '/project', :method => 'post'}
-    %h3 Create a new project:
-    %p
-      %label{:for => 'project'} Name:
-      %input.query{:type => 'text', :name => 'name', :size => '46', :maxlength => '2048', :title => 'name', :id => 'name'}
-      %input.create{:type => 'submit', :name => 'create', :id => 'create', :value => 'Create Project'}   
-  %h3 Your projects:
-    - if @projects != nil && @projects.length > 0
-      %ul
-        - @projects.each do |project|
-          %li
-            %a{:href=>"/projects/#{CGI::escape(project.name)}"} #{project.name}
+%form{:action => '/project', :method => 'post'}
+  %h3 Step one - Create a new project:
+  %p
+    %label{:for => 'project'} Name:
+    %input.query{:type => 'text', :name => 'name', :size => '46', :maxlength => '2048', :title => 'name', :id => 'name', :class => "title"}
+    %input.create{:type => 'submit', :name => 'create', :id => 'create', :value => 'Create Project'}   
+%h3 Your projects:
+- if @projects != nil && @projects.length > 0
+  %ul
+    - @projects.each do |project|
+      %li
+        %a{:href=>"/projects/#{CGI::escape(project.name)}"} #{project.name}
 
-  .span-10
-  %p here are the top twitter trends right now:
-  %ol.tweets
-    - @trends.each do |trend|
-      %li.tweet 
-        %a{:href => '/tags/'+URI.encode(trend['name'].gsub('#',''))}== #{trend['name']}
+.span-10
+%p here are the top twitter trends right now:
+%ol.tweets
+  - @trends.each do |trend|
+    %li.tweet 
+      %a{:href => '/tags/'+URI.encode(trend['name'].gsub('#',''))}== #{trend['name']}
