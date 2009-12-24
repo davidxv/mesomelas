@@ -44,7 +44,6 @@ use Chowder::Basic,{
 
   
 get '/' do
-  # TODO Sinatra::Application.environment.inspect sniff
   require_user
   @user = current_user
   @projects = @user.projects

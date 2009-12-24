@@ -11,6 +11,6 @@
         &nbsp; Perception Manager
       .span-2 &nbsp;
       .span-20
-        = haml :_user, :layout => false
+        = haml :_user, :layout => false if @user
         =yield
       %div{:class => "span-2 last"} &nbsp;
