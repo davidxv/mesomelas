@@ -1,7 +1,11 @@
 mongo-host:
-  172.16.81.1
+  localhost
 mongo-db:
   mesomelas-history
+mongo-user:
+  
+mongo-pass:
+  
 mongo-test-host:
   172.16.81.1
 mongo-test-db:
