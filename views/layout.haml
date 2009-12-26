@@ -11,7 +11,8 @@
     .container
       %div{:class => "span-24"}
         %h1.alt{:style => "background-color:#dd9900;padding:0.5em"}
-          &nbsp; Manage Perceptions
+          &nbsp; 
+          %a{:href => "/", :style => "text-decoration:none;color:#666;"}Manage Perceptions
         = haml :_user, :layout => false if @user
       %hr
       =yield
