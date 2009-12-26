@@ -16,11 +16,8 @@ require "lib/models"
 include Mongo
 include Jkl
 
-config = YAML::load_file('config/config.yml')
-
 enable :sessions
 use Rack::Flash
-
 
 use Chowder::Basic,{
   :login => lambda do |login, password|
@@ -42,15 +39,12 @@ use Chowder::Basic,{
   end
   }
 
-  
 get '/' do
   require_user
   @user = current_user
   @projects = @user.projects
-  twitter_json_url = config['twitter'] 
-#  output = JSON.parse Jkl::get_from twitter_json_url
-  @trends = []
-#  @trends = output['trends']
+  output = JSON.parse Jkl::get_from "http://search.twitter.com/trends.json"
+  @trends = output['trends']
   haml :index
 end
 
@@ -94,7 +88,9 @@ post "/search" do
   p = Project.find(params["project_id"])
   if(!Search.exists?(:conditions => 
       {:query => s.query, :project_id => p.id}))
-    headlines = Jkl::headlines(s.query)
+    feeds = YAML::load_file('config/feeds.yml')
+    source = feeds["topix"]
+    headlines = Jkl::headlines(source, CGI::escape(s.query))
     Jkl::get_items_from(headlines).each do |item|
       link = Jkl::attribute_from(item, :link)
       desc = Jkl::attribute_from(item, :description).gsub("<![CDATA[","").gsub("]]>","")
@@ -108,22 +104,23 @@ post "/search" do
   redirect "/projects/#{CGI::escape(p.name)}"
 end
 
-post "/link/update/:id" do
+get "/link/update/:id" do
   link = Link.find(params[:id])
   search = Search.find(link.search_id)
   project = Project.find(search.project_id)
-  tags = Jkl::tags(params[:summary])
-  link.entities = tags.entities.map do |e| 
-    h = Hash.new
-    h[e.type] = e.attributes["name"]
-    h
+  begin
+    key = ENV['CALAIS_KEY'] || YAML::load_file("config/keys.yml")["calais"]
+    tags = Jkl::tags(key, link.description)
+    link.entities = tags.entities.map do |e|
+      h = Hash.new
+      h[e.type] = e.attributes["name"]
+      h
+    end
+    link.save
+  rescue Calais::Error => e
+    puts("WARN: Calais Error: #{e}")
   end
-  puts link.entities[0].inspect
-  #TODO
-  #link.geographies = tags.geographies.map{|g| [g.attributes["latitude"],g.attributes["longitude"]]}
-  # link.relations = tags.relations.map{|r|}
-  link.save
-  redirect "/projects/#{CGI::escape(project.name)}/searches/#{CGI::escape(search.query)}/links/#{link.id}"
+  redirect "/projects/#{CGI::escape(project.name)}/searches/#{CGI::escape(search.query)}"
 end
 
 get "/projects/:project_id/searches/:search_id/delete" do
