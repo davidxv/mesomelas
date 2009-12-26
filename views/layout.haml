@@ -1,16 +1,20 @@
 !!!
 %html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", 'xml:lang' => "en" }
   %head
-    %title mesomelas
+    %title Manage your Perceptions
     %meta{ 'http-equiv' => 'Content-Type', :content => 'text/html; charset=utf-8' }
     %link{:rel => "stylesheet", :href => "/stylesheets/screen.css", :type => "text/css", :media => "screen, projection"}
     %link{:rel => "stylesheet", :href => "/stylesheets/print.css", :type => "text/css", :media => "print"}
   %body
-    #container
-      %h2{:class => "alt", :style => "background-color:#336633;color:#FFF;text-decoration:none"}
-        &nbsp; Perception Manager
-      .span-2 &nbsp;
-      .span-20
-        = haml :_user, :layout => false if @user
-        =yield
-      %div{:class => "span-2 last"} &nbsp;
+    .container
+      %div{:class => "span-24"}
+        %h1{:class => "alt", :style => "background-color:#dd9900;color:#FFF;text-decoration:none;"}
+          &nbsp; Manage your Perceptions
+        %h3
+          = haml :_user, :layout => false if @user
+      %hr
+      =yield
+      %hr
+      %div{:class => "span-24", :style => "background-color:#ccbb00;"} 
+        %p.large
+          &nbsp Terms of Use | Privacy Policy | Copyright Policy | Removal Notice | Partner With Us | Abuse Desk | Contact Us

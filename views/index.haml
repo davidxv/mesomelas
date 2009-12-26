@@ -12,7 +12,7 @@
         %a{:href=>"/projects/#{CGI::escape(project.name)}"} #{project.name}
 
 .span-10
-%p here are the top twitter trends right now:
+%p Or you can create a search from one of the top twitter trends:
 %ol.tweets
   - @trends.each do |trend|
     %li.tweet 

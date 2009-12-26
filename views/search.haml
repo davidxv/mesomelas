@@ -1,12 +1,19 @@
-%h3 
-  Search: #{@search.query}
-  %a{:href => "/projects/#{@project.id}/searches/#{@search.id}/delete"} (delete) 
-  TODO - add search timestamps here
-- if @search.links.length > 0
+%div{:class => "span-12", :style => "background-color:#ffffee"}
+  - if @search.links.length > 0
+    %ul
+      - @search.links.each do |link|
+        %li.link
+          %a{:href=>"/projects/#{CGI::escape(@project.name)}/searches/#{CGI::escape(@search.query)}/links/#{link.id}"} #{link.url}
+          .blockquote
+            %p 
+              = link.description
+              %a{:href => "/link/update/#{link.id}"} generate tags
+              
+%div{:class => "span-12 last", :style => "background-color:#ffffee"}
   %ul
     - @search.links.each do |link|
-      %li.link
-        %a{:href=>"/projects/#{CGI::escape(@project.name)}/searches/#{CGI::escape(@search.query)}/links/#{link.id}"} #{link.url}
-        .blockquote
-          %p #{link.description}
-  
+      - if link.entities != nil
+        - link.entities.each do |entity|
+          - entity.each do |k,v|
+            %li
+              "#{k} | #{v}"

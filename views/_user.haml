@@ -1,9 +1,27 @@
-%p
-  You are logged in as: #{@user.login} 
-  %a{:href => "/logout"} (logout)
+%div{:class => "span-24", :style => "text-align:right;"}
+  %p.small
+    You are logged in as: #{@user.login}
+    %a{:href => "/logout"} (logout)
+
+%div{:class => "span-24"}
+  %p
+    - if @project != nil
+      Project: 
+      = @project.name
+      - if @search != nil
+        | 
+        Search: 
+        = @search.query
+        %a{:href => "/projects/#{@project.id}/delete"} (delete)
+        %a{:href => "/projects/#{@project.id}/searches/#{@search.id}/delete"} (delete) 
+        %p 
+          TODO - add search timestamps here
+
+%div{:class => "span-24"}
   - if flash[:success]
     .success #{flash[:success]}
   - if flash[:notice]
     .notice #{flash[:notice]}
   - if flash[:error]
     .error #{flash[:error]}
+    
