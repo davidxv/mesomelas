@@ -7,7 +7,7 @@ require "app"
 config = YAML::load_file('config/config.yml')
 
 mongo_host = ENV['MONGO_HOST'] || config['mongo-host']
-mongo_db = ENV['MONGO_DB'] || config['mongo-db'] 
+mongo_db   = ENV['MONGO_DB']   || config['mongo-db'] 
 mongo_user = ENV['MONGO_USER'] || config['mongo-user'] 
 mongo_pass = ENV['MONGO_PASS'] || config['mongo-pass'] 
 
