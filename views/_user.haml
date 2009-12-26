@@ -4,19 +4,23 @@
     %a{:href => "/logout"} (logout)
 
 %div{:class => "span-24"}
+  %p.caps
+    Details
+  %p &nbsp;
   %p
     - if @project != nil
-      Project: 
-      = @project.name
+      %a{:href => "/projects/#{@project.name}"} #{@project.name}
+      &nbsp;|&nbsp; 
+      %a{:href => "/projects/#{@project.id}/delete"} (delete this project)
+      &nbsp;|&nbsp; 
+      = @project.created_at.strftime("Created at %a %m %b %I:%M%p")
       - if @search != nil
-        | 
-        Search: 
-        = @search.query
-        %a{:href => "/projects/#{@project.id}/delete"} (delete)
-        %a{:href => "/projects/#{@project.id}/searches/#{@search.id}/delete"} (delete) 
-        %p 
-          TODO - add search timestamps here
-
+        %p{:style => "margin-left: 1em;"}
+          = @search.query
+          &nbsp;|&nbsp;
+          %a{:href => "/projects/#{@project.id}/searches/#{@search.id}/delete"} (delete this search) 
+          &nbsp;|&nbsp;
+          = @search.created_at.strftime("Created at %a %m %b %I:%M%p")
 %div{:class => "span-24"}
   - if flash[:success]
     .success #{flash[:success]}

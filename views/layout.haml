@@ -11,8 +11,7 @@
       %div{:class => "span-24"}
         %h1.alt{:style => "background-color:#dd9900;padding:0.5em"}
           &nbsp; Manage Perceptions
-        %h3
-          = haml :_user, :layout => false if @user
+        = haml :_user, :layout => false if @user
       %hr
       =yield
       %hr

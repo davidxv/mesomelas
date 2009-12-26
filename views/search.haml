@@ -1,4 +1,6 @@
 %div{:class => "span-12", :style => "background-color:#ffffee"}
+  %p.caps
+    Search results
   - if @search.links.length > 0
     %ul
       - @search.links.each do |link|
@@ -10,6 +12,8 @@
               %a{:href => "/link/update/#{link.id}"} generate tags
               
 %div{:class => "span-12 last", :style => "background-color:#ffffee"}
+  %p.caps
+    Search tags
   %ul
     - @search.links.each do |link|
       - if link.entities != nil
