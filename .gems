@@ -2,4 +2,4 @@ chowder
 mongo_mapper
 rack-flash
 calais
-jakal
+jakal --version '>= 0.0.8'
