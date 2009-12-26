@@ -93,8 +93,9 @@ post "/search" do
     headlines = Jkl::headlines(source, CGI::escape(s.query))
     Jkl::get_items_from(headlines).each do |item|
       link = Jkl::attribute_from(item, :link)
+      title = Jkl::attribute_from(item, :title)
       desc = Jkl::attribute_from(item, :description).gsub("<![CDATA[","").gsub("]]>","")
-      s.links << Link.new(:url => link, :description => desc)
+      s.links << Link.new(:url => link, :description => desc, :title => title)
     end
     p.searches << s
     p.save!
@@ -104,7 +105,7 @@ post "/search" do
   redirect "/projects/#{CGI::escape(p.name)}"
 end
 
-get "/link/update/:id" do
+post "/link/update/:id" do
   link = Link.find(params[:id])
   search = Search.find(link.search_id)
   project = Project.find(search.project_id)

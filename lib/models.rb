@@ -42,30 +42,12 @@ class Link
   
   key :url, String
   key :description, String 
+  key :title, String
   key :search_id, ObjectId
   key :entities, Array
   key :relations, Array
   key :geographies, Array
-  
-  #tags.geographies, relations, entities
-  #tags.geographies[0].attributes["latitude"], longitude
-  #tags.geographies[0].name
 
-
-  #relation.type, .instances
-  # person value = 9600f67f-0fc2-3a6a-b896-7d7e543644df
-  
-  
-  #entity has
-    #type
-    #attributes hash name, organizationtype nationality - may be others
-    #instances[0].exact
-  
-  #@instances=[#<Calais::Response::Instance:0x1025ec858 
-  # @prefix="Gatwick and Manchester Transport Minister ", 
-  #   @offset=6316, @suffix=" said he would be \"asking questions\"", 
-  #   @exact="Sadiq Khan", @length= 10>
-  
   timestamps!
 
   belongs_to :search
