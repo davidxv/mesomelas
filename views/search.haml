@@ -4,13 +4,16 @@
   - if @search.links.length > 0
     %ul
       - @search.links.each do |link|
+        %a{:href=> "#{link.url}"} link
+        %a{:href=> "#{link.url}"} delete
         %li.link
-          %a{:href=>"/projects/#{CGI::escape(@project.name)}/searches/#{CGI::escape(@search.query)}/links/#{link.id}"} #{link.url}
-          .blockquote
-            %p 
-              = link.description
-              %a{:href => "/link/update/#{link.id}"} generate tags
-              
+          %form{:action => "/link/update/#{link.id}", :method => "post"}
+            %textarea.summary{:rows => "5", :cols => "30", :name => "summary", :id => "summary" }
+              = "#{link.title}. #{link.description}"
+            %br
+            %input.create{:type => "submit", :name => "create", :id => "create", :value => "Generate tags"}
+          %hr
+
 %div{:class => "span-12 last", :style => "background-color:#ffffee"}
   %p.caps
     Search tags
