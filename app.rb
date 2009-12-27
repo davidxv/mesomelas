@@ -110,13 +110,7 @@ post "/link/update/:id" do
   search = Search.find(link.search_id)
   project = Project.find(search.project_id)
   begin
-    key = ENV['CALAIS_KEY'] || YAML::load_file("config/keys.yml")["calais"]
-    tags = Jkl::tags(key, link.description)
-    link.entities = tags.entities.map do |e|
-      h = Hash.new
-      h[e.type] = e.attributes["name"]
-      h
-    end
+    link.entities = entity_pairs_from_calais(link.description)
     link.save
   rescue Calais::Error => e
     puts("WARN: Calais Error: #{e}")
@@ -167,3 +161,7 @@ helpers do
   end
 end
 
+def entity_pairs_from_calais(text)
+  key = ENV['CALAIS_KEY'] || YAML::load_file("config/keys.yml")["calais"]
+  Jkl::tags(key, text).entities.map{|e| {[e.type] => e.attributes["name"]}}
+end
