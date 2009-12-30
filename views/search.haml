@@ -19,8 +19,10 @@
     Search tags
   %ul
     - @search.links.each do |link|
-      - if link.entities != nil
-        - link.entities.each do |entity|
-          - entity.each do |k,v|
-            %li
-              "#{k} | #{v}"
+      - link.entities.each do |category,values|
+        %li
+          = category
+          %ul
+            - values.each do |value|
+              %li
+                = value

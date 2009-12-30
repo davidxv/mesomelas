@@ -44,9 +44,9 @@ class Link
   key :description, String 
   key :title, String
   key :search_id, ObjectId
-  key :entities, Array
-  key :relations, Array
-  key :geographies, Array
+  key :entities, Hash
+  # key :relations, Array
+  # key :geographies, Array
 
   timestamps!
 

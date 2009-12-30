@@ -75,6 +75,7 @@ get "/projects/:project_name/searches/:query" do
   @project = Project.find_by_user_id_and_name(current_user.id, params[:project_name])
   @search = Search.find_by_project_id_and_query(@project.id, params[:query])
   @user = current_user
+  @search.links.each{|link| puts link.entities.inspect}
   haml :search
 end
 
@@ -110,7 +111,8 @@ post "/link/update/:id" do
   search = Search.find(link.search_id)
   project = Project.find(search.project_id)
   begin
-    link.entities = entity_pairs_from_calais(link.description)
+    key = ENV['CALAIS_KEY'] || YAML::load_file("config/keys.yml")["calais"]
+    link.entities = Jkl::get_calais_metadata(key, link.description)
     link.save
   rescue Calais::Error => e
     puts("WARN: Calais Error: #{e}")
@@ -134,34 +136,8 @@ get "/projects/:project_name/searches/:search_query/links/:link_id" do
   haml :link
 end
 
-get "/test" do
-  #c.entities[45].instances[0].prefix
-  tags = []
-  links = Jkl::links Jkl::headlines "tiger woods"
-  links.each do |link|
-    story = Jkl::sanitize Jkl::from_doc Jkl::get_from link
-    puts story
-    puts ""
-    puts "end story #{link}"
-    begin
-      tags << Jkl::tags(story)
-    rescue Calais::Error => e
-      puts("WARN: Calais Error: #{e}")
-    end
-  end
-  
-  puts tags.length
-  @entities = tags.entities
-  haml :results
-end
-
 helpers do
   def current_user
     User.find(session[:current_user])
   end
-end
-
-def entity_pairs_from_calais(text)
-  key = ENV['CALAIS_KEY'] || YAML::load_file("config/keys.yml")["calais"]
-  Jkl::tags(key, text).entities.map{|e| {[e.type] => e.attributes["name"]}}
 end

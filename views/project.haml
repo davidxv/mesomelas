@@ -17,11 +17,13 @@
 %div{:class => "span-12 last", :style => "background-color:#ffffee"}
   %p.caps
     Project tags
-  %ul
-    - @searches.each do |search|
-      - search.links.each do |link|
-        - if link.entities != nil
-          - link.entities.each do |entity|
-            - entity.each do |k,v|
-              %li
-                "#{k} | #{v}"
+    %ul
+      - @searches.each do |search|
+        - search.links.each do |link|
+          - link.entities.each do |category,values|
+            %li
+              = category
+              %ul
+                - values.each do |value|
+                  %li
+                    = value
