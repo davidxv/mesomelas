@@ -112,7 +112,7 @@ post "/link/update/:id" do
   project = Project.find(search.project_id)
   begin
     key = ENV['CALAIS_KEY'] || YAML::load_file("config/keys.yml")["calais"]
-    link.entities = Jkl::get_calais_metadata(key, link.description)
+    link.entities = Jkl::tags(key, link.description)
     link.save
   rescue Calais::Error => e
     puts("WARN: Calais Error: #{e}")
