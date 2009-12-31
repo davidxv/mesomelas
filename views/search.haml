@@ -1,6 +1,7 @@
 %div{:class => "span-12", :style => "background-color:#ffffee"}
   %p.caps
     Search results
+  %h3 Step 3 - Generate tags from the snippets which are most relevant.
   - if @search.links.length > 0
     %ul
       - @search.links.each do |link|

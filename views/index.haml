@@ -1,12 +1,13 @@
-%form{:action => '/project', :method => 'post'}
-  %h3 Step 1 - Create a new project:
-  %p
-    %label{:for => 'project'} Name:
-    %input.query{:type => 'text', :name => 'name', :size => '46', :maxlength => '2048', :title => 'name', :id => 'name', :class => "title"}
-    %input.create{:type => 'submit', :name => 'create', :id => 'create', :value => 'Create Project'}   
-%h3 Your projects:
-- if @projects != nil && @projects.length > 0
-  %ul
-    - @projects.each do |project|
-      %li
-        %a{:href=>"/projects/#{CGI::escape(project.name)}"} #{project.name}
+%div{:class => "span-24"}
+  %form{:action => '/project', :method => 'post'}
+    %h3 Step 1 - Create a new project:
+    %p
+      %label{:for => 'project'} Name:
+      %input.query{:type => 'text', :name => 'name', :size => '46', :maxlength => '2048', :title => 'name', :id => 'name', :class => "title"}
+      %input.create{:type => 'submit', :name => 'create', :id => 'create', :value => 'Create Project'}   
+  %h3 Your projects:
+  - if @projects != nil && @projects.length > 0
+    %ul
+      - @projects.each do |project|
+        %li
+          %a{:href=>"/projects/#{CGI::escape(project.name)}"} #{project.name}

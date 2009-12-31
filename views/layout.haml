@@ -13,6 +13,12 @@
         %h1.alt{:style => "background-color:#dd9900;padding:0.5em"}
           &nbsp; 
           %a{:href => "/", :style => "text-decoration:none;color:#666;"}Manage Perceptions
+        %div{:class => "span-12"}
+          %p.alt
+            Group searches into a project.
+            %br
+            Distil the key elements of your research topic
+            into a categorised list of entities.
         = haml :_user, :layout => false if @user
       %hr
       =yield
